@@ -1,7 +1,7 @@
 // pages/men.js
-import Navbar from '../components/Navbar';
-import ProductCard from '../components/ProductCard';
-import products from '../data/men';
+import Navbar from '../../components/Navbar';
+import ProductCard from '../../components/ProductCard';
+import products from '../../data/men';
 
 export default function MenPage() {
   return (

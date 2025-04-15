@@ -1,4 +1,6 @@
-export default function ProductCard({ product }) {
+'use client';
+
+ function ProductCard({ product }) {
     return (
       <div className="card">
         <img src={product.image} alt={product.name} />
@@ -23,3 +25,4 @@ export default function ProductCard({ product }) {
     );
   }
   
+  export default ProductCard;

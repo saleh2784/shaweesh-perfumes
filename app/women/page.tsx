@@ -1,7 +1,7 @@
 // pages/women.js
-import Navbar from '../components/Navbar';
-import ProductCard from '../components/ProductCard';
-import products from '../data/women';
+import Navbar from '../../components/Navbar';
+import ProductCard from '../../components/ProductCard';
+import products from '../../data/women';
 
 export default function WomenPage() {
   return (

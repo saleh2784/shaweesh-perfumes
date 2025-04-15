@@ -1,0 +1,28 @@
+body {
+    font-family: 'Cairo', sans-serif;
+    background: linear-gradient(to right, #fffaf0, #fce3e6);
+    color: #333;
+    margin: 0;
+    padding: 0;
+  }
+  
+  nav {
+    display: flex;
+    justify-content: space-around;
+    background-color: #d4af37;
+    padding: 1rem;
+    font-weight: bold;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #a35638;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 2rem;
+  }
+  

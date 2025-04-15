@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import styles from './Navbar.module.css';
+import styles from '../app/page.module.css';
 
-export default function Navbar() {
+function Navbar() {
   return (
     <nav className={styles.navbar}>
       <Link href="/">الرئيسية</Link>
@@ -12,3 +12,5 @@ export default function Navbar() {
     </nav>
   );
 }
+
+export default Navbar;
