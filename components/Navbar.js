@@ -7,8 +7,7 @@ function Navbar() {
       <Link href="/">الرئيسية</Link>
       <Link href="/women">عطور نسائية</Link>
       <Link href="/men">عطور رجالية</Link>
-      <Link href="/about">من نحن</Link>
-      <Link href="/contact">تواصل معنا</Link>
+      <Link href="/contactus">تواصل معنا</Link>
     </nav>
   );
 }

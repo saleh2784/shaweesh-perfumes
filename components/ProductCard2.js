@@ -1,23 +1,26 @@
-//for the slider 
-
 'use client';
+import Link from 'next/link';
 
-function ProductCard({ product }) {
+export default function ProductCard({ product }) {
+  const productLink = `/${product.type}/${product.id}`;
   const whatsappLink = `https://wa.me/972505320456?text=مرحبًا، أود شراء عطر ${encodeURIComponent(product.name)} بسعر ${encodeURIComponent(product.price)}`;
 
   return (
     <div className="card">
-      <div className="image-container">
-        <img src={product.image} alt={product.name} />
-      </div>
-      <div className="content">
-        <h3>{product.name}</h3>
-        <p>{product.description}</p>
-        <strong>{product.price}</strong>
-        <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="whatsapp-button">
-          اطلب عبر واتساب
-        </a>
-      </div>
+      <Link href={productLink} style={{ textDecoration: 'none', color: 'inherit' }}>
+        <div className="image-container">
+          <img src={product.image} alt={product.name} />
+        </div>
+        <div className="content">
+          <h3>{product.name}</h3>
+          <p>{product.description}</p>
+          <strong>{product.price}</strong>
+        </div>
+      </Link>
+
+      <a href={whatsappLink} target="_blank" rel="noopener noreferrer" className="whatsapp-button">
+        اطلب عبر واتساب
+      </a>
 
       <style jsx>{`
         .card {
@@ -33,6 +36,7 @@ function ProductCard({ product }) {
           transition: transform 0.3s ease, box-shadow 0.3s ease;
           max-width: 320px;
           border: 1px solid rgba(255, 255, 255, 0.3);
+          cursor: pointer;
         }
 
         .card:hover {
@@ -87,5 +91,3 @@ function ProductCard({ product }) {
     </div>
   );
 }
-
-export default ProductCard;

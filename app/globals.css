@@ -41,7 +41,7 @@ a {
   }
 }
 
-/body {
+body {
   font-family: 'Cairo', sans-serif;
   background: linear-gradient(to right, #fffaf0, #fce3e6);
   color: #333;
@@ -67,4 +67,19 @@ h1 {
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 1.5rem;
   padding: 2rem;
+}
+
+main {
+  padding: 1rem;
+}
+
+/* Icons  */
+.icon-button {
+  margin: 0 10px;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.icon-button:hover {
+  color: #6c757d;
 }
