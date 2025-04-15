@@ -52,13 +52,21 @@ export default function ProductSlider({ products }) {
       { breakpoint: 768, settings: { slidesToShow: 1, slidesToScroll: 1 } }
     ]
   };
+
   return (
     <div className="slider-container">
-      <Slider {...settings}>
-        {shuffledProducts.map((product) => (
-          <ProductCard key={product.id + product.name} product={product} />
-        ))}
-      </Slider>
+    <Slider {...settings}>
+      {shuffledProducts.map((product) => (
+        <div key={product.id + product.name} className="fade-card">
+          <ProductCard product={product} />
+        </div>
+      ))}
+    </Slider>
+
+    {/* ✅ Outside of Slider */}
+    <div className="see-more-container">
+      <a href="/men" className="see-more-button">شاهد المزيد →</a>
+    </div>
 
       <style jsx>{`
         .slider-container {
@@ -81,13 +89,46 @@ export default function ProductSlider({ products }) {
           z-index: 10;
           transition: all 0.3s ease;
         }
-        
-        :global(.slick-center) {
-          transform: scale(1.05);
-          transition: transform 0.4s ease;
-          z-index: 2;
+        .fade-card {
+          opacity: 0;
+          transform: translateY(20px);
+          animation: fadeUp 0.8s ease forwards;
         }
-
+        
+        :global(.slick-slide.slick-active .fade-card) {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        
+        @keyframes fadeUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+          }
+        }
+        .see-more-container {
+          text-align: center;
+          margin-top: 3.5rem;
+        }
+        
+        .see-more-button {
+          display: inline-block;
+          background-color: #d4af37;
+          color: white;
+          font-weight: bold;
+          padding: 0.6rem 1.4rem;
+          border-radius: 30px;
+          text-decoration: none;
+          transition: background 0.3s ease;
+        }
+        
+        .see-more-button:hover {
+          background-color: #b68c27;
+        }
         .slider-arrow.left {
           left: 10px;
         }
