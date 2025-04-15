@@ -1,4 +1,3 @@
-// components/ProductSlider.js
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -10,35 +9,21 @@ function shuffleArray(array) {
   return [...array].sort(() => 0.5 - Math.random());
 }
 
-// Custom arrow components
-function NextArrow(props) {
-  const { onClick } = props;
+function NextArrow({ onClick }) {
   return (
-    <div onClick={onClick} style={{ ...arrowStyle, right: 0 }}>
-      <FaChevronRight size={24} />
+    <div className="slider-arrow right" onClick={onClick}>
+      <FaChevronRight size={20} />
     </div>
   );
 }
 
-function PrevArrow(props) {
-  const { onClick } = props;
+function PrevArrow({ onClick }) {
   return (
-    <div onClick={onClick} style={{ ...arrowStyle, left: 0 }}>
-      <FaChevronLeft size={24} />
+    <div className="slider-arrow left" onClick={onClick}>
+      <FaChevronLeft size={20} />
     </div>
   );
 }
-
-const arrowStyle = {
-  position: 'absolute',
-  top: '40%',
-  zIndex: 2,
-  background: '#fff',
-  borderRadius: '50%',
-  padding: '8px',
-  cursor: 'pointer',
-  boxShadow: '0 2px 5px rgba(0,0,0,0.3)'
-};
 
 export default function ProductSlider({ products }) {
   const [shuffledProducts, setShuffledProducts] = useState([]);
@@ -51,26 +36,96 @@ export default function ProductSlider({ products }) {
     dots: true,
     infinite: true,
     autoplay: true,
-    autoplaySpeed: 2500,
+    autoplaySpeed: 3000,
     speed: 600,
     rtl: true,
-    slidesToShow: 3,
-    slidesToScroll: 1,
+    centerMode: false,
+    centerPadding: '20px',
+    slidesToShow: 5,
+    slidesToScroll: 5,
+    swipe: true,
+    touchMove: true,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
     responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 2 } },
-      { breakpoint: 600, settings: { slidesToShow: 1 } }
+      { breakpoint: 1400, settings: { slidesToShow: 3, slidesToScroll: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 1, slidesToScroll: 1 } }
     ]
   };
-
   return (
-    <div style={{ padding: '2rem', position: 'relative' }}>
+    <div className="slider-container">
       <Slider {...settings}>
         {shuffledProducts.map((product) => (
           <ProductCard key={product.id + product.name} product={product} />
         ))}
       </Slider>
+
+      <style jsx>{`
+        .slider-container {
+          position: relative;
+          padding: 2rem 1rem;
+          max-width: 100%;
+          overflow: hidden;
+        }
+
+        .slider-arrow {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          background: rgba(255, 255, 255, 0.85);
+          backdrop-filter: blur(8px);
+          border-radius: 50%;
+          padding: 0.5rem;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          cursor: pointer;
+          z-index: 10;
+          transition: all 0.3s ease;
+        }
+        
+        :global(.slick-center) {
+          transform: scale(1.05);
+          transition: transform 0.4s ease;
+          z-index: 2;
+        }
+
+        .slider-arrow.left {
+          left: 10px;
+        }
+
+        .slider-arrow.right {
+          right: 10px;
+        }
+
+        .slider-arrow:hover {
+          background-color: #f2f2f2;
+        }
+
+        :global(.slick-dots) {
+          bottom: -25px;
+        }
+
+        :global(.slick-dots li button:before) {
+          font-size: 10px;
+          color: #aaa;
+          opacity: 1;
+        }
+
+        :global(.slick-dots li.slick-active button:before) {
+          color: #d81b60;
+        }
+
+        @media (max-width: 768px) {
+          .slider-arrow {
+            display: none;
+          }
+
+          .slider-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+          }
+        }
+      `}</style>
     </div>
   );
 }

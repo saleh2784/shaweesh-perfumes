@@ -1,5 +1,6 @@
 import womenPerfumes from '../../../data/women';
 import { notFound } from 'next/navigation';
+import RelatedItemsSlider from '../../../components/RelatedItemsSlider';
 
 export default function ProductDetails({ params }: { params: { id: string } }) {
   const product = womenPerfumes.find(p => p.id === Number(params.id));
@@ -40,6 +41,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
         >
         ⬅️ رجوع إلى العطور النسائية
         </a>
+        <RelatedItemsSlider currentId={product.id} allProducts={womenPerfumes} type="women" />
     </div>
   );
 }

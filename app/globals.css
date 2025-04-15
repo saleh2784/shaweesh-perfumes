@@ -83,3 +83,6 @@ main {
 .icon-button:hover {
   color: #6c757d;
 }
+
+@import 'slick-carousel/slick/slick.css';
+@import 'slick-carousel/slick/slick-theme.css';
