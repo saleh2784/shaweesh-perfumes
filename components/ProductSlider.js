@@ -17,7 +17,7 @@ function NextArrow({ onClick }) {
     <div className="slider-arrow right" onClick={onClick}>
       <FaChevronRight size={20} />
     </div>
-  );
+  );g
 }
 
 function PrevArrow({ onClick }) {

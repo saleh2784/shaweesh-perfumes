@@ -58,7 +58,7 @@ export default function Products() {
             />
             <h3 style={{ margin: '1rem 0 0.5rem' }}>{p.name}</h3>
             <p style={{ fontSize: '0.9rem', color: '#555' }}>{p.description}</p>
-            <strong style={{ color: '#d81b60' }}>{p.price.toFixed(2)} ₪</strong>
+            <strong style={{ color: '#d81b60' }}>{Number(p.price).toFixed(2)} ₪</strong>
           </div>
         ))}
       </div>
