@@ -73,7 +73,7 @@ export default function Navbar() {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  👋 مرحباً {user.name || user.email}
+                  👋 مرحباً {user.name}
                 </a>
                 <ul className="dropdown-menu dropdown-menu-end text-end">
                   <li><Link href="/profile" className="dropdown-item">الملف الشخصي</Link></li>
@@ -85,6 +85,12 @@ export default function Navbar() {
                   </li>
                 </ul>
               </li>
+              {user?.email === 'admin@gmail.com' && (
+                <li className="nav-item">
+                  <Link href="/admin" className="nav-link">لوحة الإدارة</Link>
+                </li>
+              )}
+
 
             </>
           ) : (

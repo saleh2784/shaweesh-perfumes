@@ -1,89 +1,162 @@
 'use client';
-import { useState, useEffect } from 'react'; // ✅ Added useEffect
+
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-const router = useRouter();
-
-useEffect(() => {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  if (!user || user.email !== 'admin@gmail.com') {
-    alert('🔒 Access denied. Admins only.');
-    router.push('/login');
-  }
-}, []);
-
-
-export default function LoginPage() {
+export default function AdminPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [users, setUsers] = useState<any[]>([]);
+  const [logs, setLogs] = useState<any[]>([]);
 
-  // ✅ Redirect to home if already logged in
+  // 🔐 Admin protection
   useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      router.push('/');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (!user || user.email !== 'admin@gmail.com') {
+      alert('🔒 Access denied. Admins only.');
+      router.push('/login');
     }
   }, []);
 
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
+  // Load users + logs
+  useEffect(() => {
+    const all = localStorage.getItem('allUsers');
+    const loginLogs = localStorage.getItem('loginLogs');
+    if (all) setUsers(JSON.parse(all));
+    if (loginLogs) setLogs(JSON.parse(loginLogs));
+  }, []);
 
-    const users = JSON.parse(localStorage.getItem('allUsers') || '[]');
-    const match = users.find((u: any) => u.email === email && u.password === password);
+  // 🗑️ Delete single user
+  const handleDelete = (email: string) => {
+    const updated = users.filter((u) => u.email !== email);
+    localStorage.setItem('allUsers', JSON.stringify(updated));
+    setUsers(updated);
+  };
 
-    if (!match) {
-      alert('❌ البريد الإلكتروني أو كلمة المرور غير صحيحة');
-      return;
-    }
+  // ➕ Add or update user
+  const handleAddUser = () => {
+    const email = prompt("Enter user's email:");
+    const name = prompt("Enter name:");
+    const password = prompt("Enter password:");
 
-    // ✅ Save full user (with name if available)
-    localStorage.setItem('user', JSON.stringify({ email }));
-    alert('✅ تم تسجيل الدخول بنجاح');
-    window.location.href = '/';
+    if (!email || !name || !password) return;
+
+    const updated = [...users.filter((u) => u.email !== email), { email, name, password }];
+    localStorage.setItem('allUsers', JSON.stringify(updated));
+    setUsers(updated);
+    alert('✅ User added or updated.');
+  };
+
+  // ⬇️ Export to CSV
+  const exportCSV = () => {
+    const header = ['Name', 'Email', 'Password'];
+    const rows = users.map((u) => [u.name, u.email, u.password]);
+    const csv = [header, ...rows].map((row) => row.join(',')).join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'users.csv';
+    link.click();
+  };
+
+  // 🔒 Admin logout
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    router.push('/login');
+  };
+
+  // 🔑 Password reset (manual)
+  const resetPassword = (email: string) => {
+    const newPass = prompt('Enter new password for: ' + email);
+    if (!newPass) return;
+
+    const updated = users.map((u) => u.email === email ? { ...u, password: newPass } : u);
+    localStorage.setItem('allUsers', JSON.stringify(updated));
+    setUsers(updated);
+    alert('✅ Password reset!');
   };
 
   return (
-    <main style={{ maxWidth: '400px', margin: '4rem auto', padding: '2rem', border: '1px solid #ddd', borderRadius: '12px' }}>
-      <h2 style={{ textAlign: 'center' }}>تسجيل الدخول</h2>
-      <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <input
-          type="email"
-          placeholder="البريد الإلكتروني"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          style={{ padding: '0.6rem', borderRadius: '8px', border: '1px solid #ccc' }}
-        />
-        <input
-          type="password"
-          placeholder="كلمة المرور"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          style={{ padding: '0.6rem', borderRadius: '8px', border: '1px solid #ccc' }}
-        />
-        <button
-          type="submit"
-          style={{
-            backgroundColor: '#d81b60',
-            color: '#fff',
-            padding: '0.8rem',
-            border: 'none',
-            borderRadius: '8px',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-          }}
-        >
-          تسجيل الدخول
-        </button>
-        <p style={{ textAlign: 'center', marginTop: '1rem' }}>
-          ليس لديك حساب؟{' '}
-          <a href="/register" style={{ color: '#d81b60', fontWeight: 'bold' }}>
-            سجل الآن
-          </a>
-        </p>
-      </form>
-    </main>
+    <div style={{ padding: '2rem', maxWidth: '900px', margin: 'auto' }}>
+      <h2>🛠️ Admin Panel</h2>
+
+      {/* Toolbar */}
+      <div style={{ marginBottom: '1.5rem' }}>
+        <button onClick={handleLogout} style={btn('gray')}>🔓 Logout</button>
+        <button onClick={handleAddUser} style={btn('green')}>➕ Add/Update User</button>
+        <button onClick={exportCSV} style={btn('blue')}>📥 Export CSV</button>
+      </div>
+
+      {/* User Table */}
+      <h3>👥 Registered Users</h3>
+      {users.length === 0 ? (
+        <p>No users found.</p>
+      ) : (
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <thead>
+            <tr style={{ background: '#eee' }}>
+              <th style={cell}>#</th>
+              <th style={cell}>Name</th>
+              <th style={cell}>Email</th>
+              <th style={cell}>Password</th>
+              <th style={cell}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((u, i) => (
+              <tr key={u.email}>
+                <td style={cell}>{i + 1}</td>
+                <td style={cell}>{u.name}</td>
+                <td style={cell}>{u.email}</td>
+                <td style={cell}>{u.password}</td>
+                <td style={cell}>
+                  <button onClick={() => resetPassword(u.email)} style={miniBtn('goldenrod')}>Reset</button>
+                  <button onClick={() => handleDelete(u.email)} style={miniBtn('crimson')}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {/* Login Logs */}
+      <h3 style={{ marginTop: '3rem' }}>📜 Login Logs</h3>
+      {logs.length === 0 ? (
+        <p>No login history found.</p>
+      ) : (
+        <ul>
+          {logs.slice().reverse().map((log, i) => (
+            <li key={i}>{log.email} → {log.time}</li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
+
+const btn = (color: string) => ({
+  backgroundColor: color,
+  color: '#fff',
+  padding: '0.6rem 1.2rem',
+  marginRight: '0.8rem',
+  border: 'none',
+  borderRadius: '6px',
+  cursor: 'pointer',
+  fontWeight: 'bold',
+});
+
+const miniBtn = (color: string) => ({
+  backgroundColor: color,
+  color: '#fff',
+  border: 'none',
+  padding: '4px 10px',
+  borderRadius: '6px',
+  marginLeft: '5px',
+  cursor: 'pointer',
+});
+
+const cell = {
+  border: '1px solid #ccc',
+  padding: '8px',
+  textAlign: 'center' as const,
+};

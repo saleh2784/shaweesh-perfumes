@@ -27,7 +27,7 @@ export default function LoginPage() {
     }
 
     // ✅ Save full user (with name if available)
-    localStorage.setItem('user', JSON.stringify({ email }));
+    localStorage.setItem('user', JSON.stringify(match));
     alert('✅ تم تسجيل الدخول بنجاح');
     window.location.href = '/';
   };
