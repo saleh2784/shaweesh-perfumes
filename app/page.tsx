@@ -7,6 +7,8 @@ import VideoPage from './video/page';
 import BackgroundVideo from '../components/BackgroundVideo';
 import FeedbackSlider from '../components/FeedbackSlider';
 import MoonBannerSection from '../components/MoonBannerSection';
+import Products from '../components/Products';
+
 
 export default function Home() {
   const products = getAllProducts();
@@ -24,6 +26,7 @@ export default function Home() {
       <MoonBannerSection />
       <FeedbackSlider />
       <ScrollToTop />
+      <Products />
     </main>
   );
 }
