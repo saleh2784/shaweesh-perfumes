@@ -21,9 +21,6 @@ export default function ProductCard({ product }) {
             <p>{product.description}</p>
             <strong>{product.price}</strong>
           </div>
-          <button className="add-to-cart-button" onClick={() => addToCart(product)}>
-          🛒 أضف إلى السلة
-        </button>
         </div>
       </Link>
 
@@ -35,7 +32,24 @@ export default function ProductCard({ product }) {
       >
         اطلب عبر واتساب
       </a>
-
+      <button
+        onClick={() => {
+          addToCart(product);
+          alert("✅ تمت إضافة المنتج إلى السلة!");
+        }}
+        style={{
+          marginTop: '1rem',
+          padding: '0.6rem 1.4rem',
+          backgroundColor: '#d81b60',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '8px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+        }}
+      >
+        🛒 أضف إلى السلة
+      </button>
       <style jsx>{`
         .card {
           background: rgba(255, 255, 255, 0.1);
