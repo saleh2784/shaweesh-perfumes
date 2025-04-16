@@ -2,10 +2,26 @@
 import Link from 'next/link';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 
 export default function Navbar() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('user');
+    if (stored) {
+      setUser(JSON.parse(stored));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    setUser(null);
+    window.location.href = '/login';
+  };
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div className="container-fluid">
         {/* Logo + Brand */}
         <Link href="/" className="navbar-brand d-flex align-items-center gap-2">
@@ -32,7 +48,7 @@ export default function Navbar() {
         </button>
 
         <div className="collapse navbar-collapse justify-content-end" id="navbarNav">
-          <ul className="navbar-nav">
+          <ul className="navbar-nav align-items-center">
             <li className="nav-item">
               <Link href="/" className="nav-link">الرئيسية</Link>
             </li>
@@ -45,6 +61,38 @@ export default function Navbar() {
             <li className="nav-item">
               <Link href="/contactus" className="nav-link">اتصل بنا</Link>
             </li>
+
+            {/* 👤 Authenticated User */}
+            {user ? (
+            <>
+              <li className="nav-item dropdown">
+                <a
+                  className="nav-link dropdown-toggle text-info fw-bold fs-5"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  👋 مرحباً {user.name || user.email}
+                </a>
+                <ul className="dropdown-menu dropdown-menu-end text-end">
+                  <li><Link href="/profile" className="dropdown-item">الملف الشخصي</Link></li>
+                  <li><hr className="dropdown-divider" /></li>
+                  <li>
+                    <button onClick={handleLogout} className="dropdown-item text-danger">
+                      تسجيل الخروج
+                    </button>
+                  </li>
+                </ul>
+              </li>
+
+            </>
+          ) : (
+            <li className="nav-item">
+              <Link href="/login" className="nav-link">تسجيل الدخول</Link>
+            </li>
+          )}
+          
           </ul>
         </div>
       </div>
