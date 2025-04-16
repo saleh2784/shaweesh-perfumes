@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import { addToCart } from '../lib/cartUtils';
 
 export default function ProductCard({ product }) {
   const productLink = `/${product.type}/${product.id}`;
@@ -34,6 +35,25 @@ export default function ProductCard({ product }) {
       >
         اطلب عبر واتساب
       </a>
+      {/* ✅ Add to Cart Button */}
+      <button
+        onClick={() => {
+          addToCart(product);
+          alert("✅ تمت إضافة المنتج إلى السلة!");
+        }}
+        style={{
+          marginTop: '1rem',
+          padding: '0.6rem 1.4rem',
+          backgroundColor: '#d81b60',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '8px',
+          fontWeight: 'bold',
+          cursor: 'pointer'
+        }}
+      >
+        🛒 أضف إلى السلة
+      </button>
 
       <style jsx>{`
         .card {

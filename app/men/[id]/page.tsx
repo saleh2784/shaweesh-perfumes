@@ -1,7 +1,9 @@
+'use client';
 import menPerfumes from '../../../data/men';
 import { notFound } from 'next/navigation';
 import RelatedItemsSlider from '../../../components/RelatedItemsSlider';
 import ScrollToTop from '@/components/ScrollToTop';
+
 
 export default function ProductDetails({ params }: { params: { id: string } }) {
   const product = menPerfumes.find(p => p.id === Number(params.id));
@@ -18,6 +20,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
         />
         <p style={{ marginTop: '1rem' }}>{product.description}</p>
         <h3 style={{ margin: '1rem 0', color: '#d81b60' }}>{product.price}</h3>
+        <h1>⬇️ قبل الزر</h1>
         <a
           href={`https://wa.me/+972505320456?text=أرغب بشراء العطر: ${product.name}`}
           target="_blank"
@@ -34,6 +37,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
         >
           شراء عبر واتساب
         </a>
+      <br />
         <br />
         <a
           href="/men"

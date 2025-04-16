@@ -2,6 +2,8 @@
 
 'use client';
 import Link from 'next/link';
+import { addToCart } from '../lib/cartUtils';
+
 
 export default function ProductCard({ product }) {
   const detailLink = `/${product.type}/${product.id}`;
@@ -19,6 +21,9 @@ export default function ProductCard({ product }) {
             <p>{product.description}</p>
             <strong>{product.price}</strong>
           </div>
+          <button className="add-to-cart-button" onClick={() => addToCart(product)}>
+          🛒 أضف إلى السلة
+        </button>
         </div>
       </Link>
 
@@ -52,6 +57,23 @@ export default function ProductCard({ product }) {
           box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
         }
 
+        .add-to-cart-button {
+          margin-top: 0.7rem;
+          background-color: #d81b60;
+          color: white;
+          font-weight: bold;
+          border: none;
+          padding: 0.5rem 1.2rem;
+          border-radius: 30px;
+          cursor: pointer;
+          transition: background 0.3s ease;
+        }
+        
+        .add-to-cart-button:hover {
+          background-color: #b8485f;
+        }
+        
+        
         .image-container {
           border-radius: 12px;
           overflow: hidden;
