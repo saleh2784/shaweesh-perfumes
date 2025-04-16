@@ -4,6 +4,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
+function getGreeting() {
+  const hour = new Date().getHours();
+
+  if (hour < 12) return '🌅 صباح الخير';
+  if (hour < 18) return '☀️ مساء الخير';
+  return '🌙 ليلة سعيدة';
+}
+
 export default function Navbar() {
   const [user, setUser] = useState(null);
 
@@ -73,7 +81,8 @@ export default function Navbar() {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  👋 مرحباً {user.name}
+          
+                  {getGreeting()}،👋 {user.name}
                 </a>
                 <ul className="dropdown-menu dropdown-menu-end text-end">
                   <li><Link href="/profile" className="dropdown-item">الملف الشخصي</Link></li>
