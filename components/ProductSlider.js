@@ -6,7 +6,7 @@ import ProductCard from './ProductCard';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { addToCart } from '../lib/cartUtils';
 
-// window.dispatchEvent(new Event('open-cart'));
+window.dispatchEvent(new Event('open-cart'));
 
 function shuffleArray(array) {
   return [...array].sort(() => 0.5 - Math.random());

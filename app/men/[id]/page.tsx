@@ -8,11 +8,12 @@ import ScrollToTop from '@/components/ScrollToTop';
 import { addToCart } from '../../../lib/cartUtils';
 import FloatingCartIcon from '../../../components/FloatingCartIcon';
 import { useCart } from '@/context/CartContext';
+import Image from 'next/image';
 
 export default function ProductDetails({ params }: { params: { id: string } }) {
-  const { openCart } = useCart(); // ✅ Moved here inside the component
+  const { openCart } = useCart();
   const id = Number(params.id);
-  const product = menPerfumes.find(p => p.id === id);
+  const product = menPerfumes.find((p) => p.id === id);
   if (!product) return notFound();
 
   useEffect(() => {
@@ -21,75 +22,94 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
 
   return (
     <>
-      <div style={{ padding: '2rem', textAlign: 'center' }}>
-        <h1>{product.name}</h1>
-        <img
-          src={product.image}
-          alt={product.name}
-          style={{ width: '300px', borderRadius: '10px' }}
-        />
-        <p style={{ marginTop: '1rem' }}>{product.description}</p>
-        <h3 style={{ margin: '1rem 0', color: '#d81b60' }}>{product.price}</h3>
+      <div style={{
+        padding: '3rem 1rem',
+        maxWidth: '600px',
+        margin: 'auto',
+        textAlign: 'center',
+        background: 'rgba(255, 255, 255, 0.95)',
+        borderRadius: '16px',
+        boxShadow: '0 10px 25px rgba(0,0,0,0.08)',
+      }}>
+        <h1 style={{ color: '#333', fontSize: '2rem', marginBottom: '1rem' }}>{product.name}</h1>
 
-        {/* ✅ WhatsApp Purchase Button */}
-        <a
-          href={`https://wa.me/+972505320456?text=أرغب بشراء العطر: ${product.name}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: 'inline-block',
-            backgroundColor: '#25d366',
-            color: '#fff',
-            padding: '0.6rem 1.4rem',
-            borderRadius: '8px',
-            fontWeight: 'bold',
-            textDecoration: 'none',
-          }}
-        >
-          شراء عبر واتساب
-        </a>
+        <div style={{
+          width: '100%',
+          maxWidth: '320px',
+          margin: '0 auto 1rem',
+          borderRadius: '16px',
+          overflow: 'hidden',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+        }}>
+          <Image
+            src={product.image}
+            alt={product.name}
+            width={320}
+            height={320}
+            style={{ objectFit: 'cover' }}
+            unoptimized
+          />
+        </div>
 
-        {/* ✅ Add to Cart */}
-        <button
-          onClick={() => {
-            addToCart({ ...product, quantity: 1 });
-            openCart(); // ✅ Automatically open cart drawer
-          }}
-          style={{
-            marginTop: '1rem',
-            padding: '0.6rem 1.4rem',
-            backgroundColor: '#d81b60',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '8px',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-          }}
-        >
-          🛒 أضف إلى السلة
-        </button>
+        <p style={{ fontSize: '1rem', color: '#555', marginBottom: '0.5rem' }}>{product.description}</p>
+        <h3 style={{ fontSize: '1.5rem', color: '#a35638', marginBottom: '1.5rem' }}>{product.price} ₪</h3>
 
-        <a
-          href="/men"
-          style={{
-            marginTop: '2rem',
-            display: 'inline-block',
-            color: '#555',
-            textDecoration: 'underline',
-            fontWeight: 'bold',
-          }}
-        >
-          ⬅️ رجوع إلى العطور الرجالية
-        </a>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}>
+          <a
+            href={`https://wa.me/+972505320456?text=أرغب بشراء العطر: ${product.name}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              background: 'linear-gradient(135deg, #25D366, #1ebe5d)',
+              color: '#fff',
+              padding: '0.7rem 1.5rem',
+              borderRadius: '30px',
+              fontWeight: 'bold',
+              textDecoration: 'none',
+              transition: 'background 0.3s ease',
+            }}
+          >
+            💬 شراء عبر واتساب
+          </a>
+
+          <button
+            onClick={() => {
+              addToCart({ ...product, quantity: 1 });
+              openCart();
+            }}
+            style={{
+              background: 'linear-gradient(135deg, #d81b60, #c2185b)',
+              color: '#fff',
+              padding: '0.7rem 1.5rem',
+              border: 'none',
+              borderRadius: '30px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              transition: 'opacity 0.3s ease',
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.opacity = '0.9')}
+            onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
+          >
+            🛒 أضف إلى السلة
+          </button>
+
+          <a
+            href="/men"
+            style={{
+              marginTop: '1rem',
+              color: '#444',
+              fontWeight: 'bold',
+              textDecoration: 'underline',
+              fontSize: '0.95rem',
+            }}
+          >
+            ⬅️ رجوع إلى العطور الرجالية
+          </a>
+        </div>
       </div>
 
-      {/* Related Items */}
       <RelatedItemsSlider currentId={product.id} allProducts={menPerfumes} type="men" />
-
-      {/* Scroll To Top Button */}
       <ScrollToTop />
-
-      {/* Floating Cart Icon */}
       <FloatingCartIcon />
     </>
   );

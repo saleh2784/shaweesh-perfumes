@@ -8,6 +8,12 @@ window.dispatchEvent(new Event('open-cart'));
 
 export default function ProductCard({ product }) {
   const detailLink = `/${product.type}/${product.id}`;
+  const handleCartOpen = () => {
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new Event('open-cart'));
+    }
+  };
+  
   const whatsappLink = `https://wa.me/972505320456?text=مرحبًا، أود شراء عطر ${encodeURIComponent(product.name)} بسعر ${encodeURIComponent(product.price)}`;
 
   return (
