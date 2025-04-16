@@ -1,15 +1,23 @@
 'use client';
+
+import { useEffect } from 'react';
 import menPerfumes from '../../../data/men';
 import { notFound } from 'next/navigation';
 import RelatedItemsSlider from '../../../components/RelatedItemsSlider';
 import ScrollToTop from '@/components/ScrollToTop';
 import { addToCart } from '../../../lib/cartUtils';
+import FloatingCartIcon from '../../../components/FloatingCartIcon';
+import { useCart } from '@/context/CartContext';
 
 export default function ProductDetails({ params }: { params: { id: string } }) {
+  const { openCart } = useCart(); // ✅ Moved here inside the component
   const id = Number(params.id);
-  
-  const product = menPerfumes.find(p => p.id === Number(params.id));
+  const product = menPerfumes.find(p => p.id === id);
   if (!product) return notFound();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [params.id]);
 
   return (
     <>
@@ -22,6 +30,8 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
         />
         <p style={{ marginTop: '1rem' }}>{product.description}</p>
         <h3 style={{ margin: '1rem 0', color: '#d81b60' }}>{product.price}</h3>
+
+        {/* ✅ WhatsApp Purchase Button */}
         <a
           href={`https://wa.me/+972505320456?text=أرغب بشراء العطر: ${product.name}`}
           target="_blank"
@@ -39,24 +49,26 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
           شراء عبر واتساب
         </a>
 
+        {/* ✅ Add to Cart */}
         <button
-        onClick={() => {
-          addToCart(product);
-          alert("✅ تمت إضافة المنتج إلى السلة!");
-        }}
-        style={{
-          marginTop: '1rem',
-          padding: '0.6rem 1.4rem',
-          backgroundColor: '#d81b60',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '8px',
-          fontWeight: 'bold',
-          cursor: 'pointer',
-        }}
-      >
-        🛒 أضف إلى السلة
-      </button>
+          onClick={() => {
+            addToCart({ ...product, quantity: 1 });
+            openCart(); // ✅ Automatically open cart drawer
+          }}
+          style={{
+            marginTop: '1rem',
+            padding: '0.6rem 1.4rem',
+            backgroundColor: '#d81b60',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '8px',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+          }}
+        >
+          🛒 أضف إلى السلة
+        </button>
+
         <a
           href="/men"
           style={{
@@ -70,10 +82,15 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
           ⬅️ رجوع إلى العطور الرجالية
         </a>
       </div>
-      <ScrollToTop/>
-      {/* ✅ Related Items Section */}
+
+      {/* Related Items */}
       <RelatedItemsSlider currentId={product.id} allProducts={menPerfumes} type="men" />
-      
+
+      {/* Scroll To Top Button */}
+      <ScrollToTop />
+
+      {/* Floating Cart Icon */}
+      <FloatingCartIcon />
     </>
   );
 }

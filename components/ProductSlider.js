@@ -5,6 +5,8 @@ import Slider from 'react-slick';
 import ProductCard from './ProductCard';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
+window.dispatchEvent(new Event('open-cart'));
+
 function shuffleArray(array) {
   return [...array].sort(() => 0.5 - Math.random());
 }

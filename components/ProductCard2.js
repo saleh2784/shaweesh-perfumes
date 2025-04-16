@@ -2,6 +2,8 @@
 import Link from 'next/link';
 import { addToCart } from '../lib/cartUtils';
 
+window.dispatchEvent(new Event('open-cart'));
+
 export default function ProductCard({ product }) {
   const productLink = `/${product.type}/${product.id}`;
   const whatsappLink = `https://wa.me/972505320456?text=مرحبًا، أود شراء عطر ${encodeURIComponent(

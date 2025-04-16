@@ -18,6 +18,7 @@ import BootstrapClient from '../components/BootstrapClient';
 //   variable: "--font-geist-mono",
 //   subsets: ["latin"],
 // });
+import { CartProvider } from '../context/CartContext';
 
 export const metadata: Metadata = {
   title: "الشاويش للعطور",
@@ -35,9 +36,11 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Cairo:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body style={{ fontFamily: "'Cairo', 'Amiri', sans-serif" }}>
+      <CartProvider>
       <BootstrapClient />
       <Navbar />
         {children}
+      </CartProvider>
       </body>
     </html>
   );

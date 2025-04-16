@@ -4,6 +4,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
+const handleCartOpen = () => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new Event('open-cart'));
+  }
+};
+
+
 function getGreeting() {
   const hour = new Date().getHours();
 
@@ -99,15 +106,17 @@ export default function Navbar() {
                   <Link href="/admin" className="nav-link">لوحة الإدارة</Link>
                 </li>
               )}
-
-
+              <li className="nav-item">
+                <button onClick={handleCartOpen} className="btn btn-outline-light mx-2">
+                  🛒 السلة
+                </button>
+              </li>
             </>
           ) : (
             <li className="nav-item">
               <Link href="/login" className="nav-link">تسجيل الدخول</Link>
             </li>
           )}
-          
           </ul>
         </div>
       </div>
