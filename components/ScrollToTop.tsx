@@ -1,10 +1,16 @@
 'use client';
 import React from 'react';
 
-const ScrollToTop = () => {
+const ScrollToTop: React.FC = () => {
+  const handleScroll = (): void => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <button
-      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      onClick={handleScroll}
       style={{
         position: 'fixed',
         bottom: '20px',

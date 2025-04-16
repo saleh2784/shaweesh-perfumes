@@ -1,24 +1,34 @@
 'use client';
 
-import { useEffect } from 'react';
-import menPerfumes from '../../../data/men';
-import { notFound } from 'next/navigation';
-import RelatedItemsSlider from '../../../components/RelatedItemsSlider';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import ScrollToTop from '@/components/ScrollToTop';
-import { addToCart } from '../../../lib/cartUtils';
-import FloatingCartIcon from '../../../components/FloatingCartIcon';
+import RelatedItemsSlider from '@/components/RelatedItemsSlider';
+import FloatingCartIcon from '@/components/FloatingCartIcon';
+import { addToCart } from '@/lib/cartUtils';
 import { useCart } from '@/context/CartContext';
 import Image from 'next/image';
 
-export default function ProductDetails({ params }: { params: { id: string } }) {
+type Product = {
+  id: number;
+  name: string;
+  price: string;
+  image: string;
+  description: string;
+  type: string;
+};
+
+export default function ProductClient({ id }: { id: string }) {
+  const [product, setProduct] = useState<Product | null>(null);
   const { openCart } = useCart();
-  const id = Number(params.id);
-  const product = menPerfumes.find((p) => p.id === id);
-  if (!product) return notFound();
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [params.id]);
+    axios.get(`http://localhost:3001/products/${id}`)
+      .then(res => setProduct(res.data))
+      .catch(err => console.error(err));
+  }, [id]);
+
+  if (!product) return <p>جارٍ تحميل المنتج...</p>;
 
   return (
     <>
@@ -31,28 +41,17 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
         borderRadius: '16px',
         boxShadow: '0 10px 25px rgba(0,0,0,0.08)',
       }}>
-        <h1 style={{ color: '#333', fontSize: '2rem', marginBottom: '1rem' }}>{product.name}</h1>
-
-        <div style={{
-          width: '100%',
-          maxWidth: '320px',
-          margin: '0 auto 1rem',
-          borderRadius: '16px',
-          overflow: 'hidden',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-        }}>
-          <Image
-            src={product.image}
-            alt={product.name}
-            width={320}
-            height={320}
-            style={{ objectFit: 'cover' }}
-            unoptimized
-          />
-        </div>
-
-        <p style={{ fontSize: '1rem', color: '#555', marginBottom: '0.5rem' }}>{product.description}</p>
-        <h3 style={{ fontSize: '1.5rem', color: '#a35638', marginBottom: '1.5rem' }}>{product.price} ₪</h3>
+        <h1>{product.name}</h1>
+        <Image
+          src={product.image}
+          alt={product.name}
+          width={320}
+          height={320}
+          style={{ objectFit: 'cover', borderRadius: '16px', marginBottom: '1rem' }}
+          unoptimized
+        />
+        <p>{product.description}</p>
+        <h3 style={{ color: '#a35638' }}>{Number(product.price).toFixed(2)} ₪</h3>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}>
           <a
@@ -66,7 +65,6 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
               borderRadius: '30px',
               fontWeight: 'bold',
               textDecoration: 'none',
-              transition: 'background 0.3s ease',
             }}
           >
             💬 شراء عبر واتساب
@@ -81,34 +79,21 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
               background: 'linear-gradient(135deg, #d81b60, #c2185b)',
               color: '#fff',
               padding: '0.7rem 1.5rem',
-              border: 'none',
               borderRadius: '30px',
               fontWeight: 'bold',
+              border: 'none',
               cursor: 'pointer',
-              transition: 'opacity 0.3s ease',
             }}
-            onMouseOver={(e) => (e.currentTarget.style.opacity = '0.9')}
-            onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
           >
             🛒 أضف إلى السلة
           </button>
-
-          <a
-            href="/men"
-            style={{
-              marginTop: '1rem',
-              color: '#444',
-              fontWeight: 'bold',
-              textDecoration: 'underline',
-              fontSize: '0.95rem',
-            }}
-          >
-            ⬅️ رجوع إلى العطور الرجالية
-          </a>
         </div>
+
+        <a href="/men" style={{ display: 'block', marginTop: '2rem', fontWeight: 'bold' }}>
+          ⬅️ رجوع إلى العطور الرجالية
+        </a>
       </div>
 
-      <RelatedItemsSlider currentId={product.id} allProducts={menPerfumes} type="men" />
       <ScrollToTop />
       <FloatingCartIcon />
     </>

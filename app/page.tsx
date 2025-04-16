@@ -4,7 +4,6 @@ import ProductSlider from '../components/ProductSlider';
 import styles from '../app/page.module.css';
 import ScrollToTop from '../components/ScrollToTop';
 import VideoPage from './video/page';
-import BackgroundVideo from '../components/BackgroundVideo';
 import FeedbackSlider from '../components/FeedbackSlider';
 import MoonBannerSection from '../components/MoonBannerSection';
 import Products from '../components/Products';

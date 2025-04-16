@@ -1,20 +1,26 @@
-//for the slider 
-
 'use client';
+
 import Link from 'next/link';
 import { addToCart } from '../lib/cartUtils';
 
-// window.dispatchEvent(new Event('open-cart'));
+type Product = {
+  id: number;
+  name: string;
+  price: string;
+  type: string;
+  image: string;
+  description: string;
+};
 
-export default function ProductCard({ product }) {
+type Props = {
+  product: Product;
+};
+
+export default function ProductCard({ product }: Props) {
   const detailLink = `/${product.type}/${product.id}`;
-  const handleCartOpen = () => {
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new Event('open-cart'));
-    }
-  };
-  
-  const whatsappLink = `https://wa.me/972505320456?text=مرحبًا، أود شراء عطر ${encodeURIComponent(product.name)} بسعر ${encodeURIComponent(product.price)}`;
+  const whatsappLink = `https://wa.me/972505320456?text=مرحبًا، أود شراء عطر ${encodeURIComponent(
+    product.name
+  )} بسعر ${encodeURIComponent(product.price)}`;
 
   return (
     <div className="card">
@@ -39,10 +45,11 @@ export default function ProductCard({ product }) {
       >
         اطلب عبر واتساب
       </a>
+
       <button
         onClick={() => {
           addToCart(product);
-          alert("✅ تمت إضافة المنتج إلى السلة!");
+          alert('✅ تمت إضافة المنتج إلى السلة!');
         }}
         style={{
           marginTop: '1rem',
@@ -57,6 +64,7 @@ export default function ProductCard({ product }) {
       >
         🛒 أضف إلى السلة
       </button>
+
       <style jsx>{`
         .card {
           background: rgba(255, 255, 255, 0.1);
@@ -78,23 +86,6 @@ export default function ProductCard({ product }) {
           box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
         }
 
-        .add-to-cart-button {
-          margin-top: 0.7rem;
-          background-color: #d81b60;
-          color: white;
-          font-weight: bold;
-          border: none;
-          padding: 0.5rem 1.2rem;
-          border-radius: 30px;
-          cursor: pointer;
-          transition: background 0.3s ease;
-        }
-        
-        .add-to-cart-button:hover {
-          background-color: #b8485f;
-        }
-        
-        
         .image-container {
           border-radius: 12px;
           overflow: hidden;

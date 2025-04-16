@@ -20,6 +20,29 @@ app.get('/', (req, res) => {
   res.send('🛠️ API is running! Try /products');
 });
 
+// ✅ Get men products
+app.get('/products/men', async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM products WHERE type = 'men'");
+    res.json(result.rows);
+    console.log('🟢 /products/men called');
+  } catch (err) {
+    console.error('❌ Failed to fetch men products:', err.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ✅ Get men products
+app.get('/products/women', async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM products WHERE type = 'women'");
+    res.json(result.rows);
+  } catch (err) {
+    console.error('❌ Failed to fetch men products:', err.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // ✅ Get all products
 app.get('/products', async (req, res) => {
   try {

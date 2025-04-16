@@ -1,3 +1,4 @@
+// for men and women product to show all products
 'use client';
 
 import { useEffect, useState } from 'react';

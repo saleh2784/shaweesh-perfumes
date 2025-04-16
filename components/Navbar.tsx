@@ -1,8 +1,14 @@
 'use client';
+
 import Link from 'next/link';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+
+type User = {
+  name: string;
+  email: string;
+};
 
 const handleCartOpen = () => {
   if (typeof window !== 'undefined') {
@@ -10,22 +16,24 @@ const handleCartOpen = () => {
   }
 };
 
-
-function getGreeting() {
+function getGreeting(): string {
   const hour = new Date().getHours();
-
   if (hour < 12) return '🌅 صباح الخير';
   if (hour < 18) return '☀️ مساء الخير';
   return '🌙 ليلة سعيدة';
 }
 
 export default function Navbar() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem('user');
     if (stored) {
-      setUser(JSON.parse(stored));
+      try {
+        setUser(JSON.parse(stored));
+      } catch (e) {
+        console.error('Error parsing user from localStorage:', e);
+      }
     }
   }, []);
 
@@ -77,46 +85,48 @@ export default function Navbar() {
               <Link href="/contactus" className="nav-link">اتصل بنا</Link>
             </li>
 
-            {/* 👤 Authenticated User */}
             {user ? (
-            <>
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle text-info fw-bold fs-5"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-          
-                  {getGreeting()}،👋 {user.name}
-                </a>
-                <ul className="dropdown-menu dropdown-menu-end text-end">
-                  <li><Link href="/profile" className="dropdown-item">الملف الشخصي</Link></li>
-                  <li><hr className="dropdown-divider" /></li>
-                  <li>
-                    <button onClick={handleLogout} className="dropdown-item text-danger">
-                      تسجيل الخروج
-                    </button>
-                  </li>
-                </ul>
-              </li>
-              {user?.email === 'admin@gmail.com' && (
-                <li className="nav-item">
-                  <Link href="/admin" className="nav-link">لوحة الإدارة</Link>
+              <>
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle text-info fw-bold fs-5"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    {getGreeting()}،👋 {user.name}
+                  </a>
+                  <ul className="dropdown-menu dropdown-menu-end text-end">
+                    <li>
+                      <Link href="/profile" className="dropdown-item">الملف الشخصي</Link>
+                    </li>
+                    <li><hr className="dropdown-divider" /></li>
+                    <li>
+                      <button onClick={handleLogout} className="dropdown-item text-danger">
+                        تسجيل الخروج
+                      </button>
+                    </li>
+                  </ul>
                 </li>
-              )}
+
+                {user.email === 'admin@gmail.com' && (
+                  <li className="nav-item">
+                    <Link href="/admin" className="nav-link">لوحة الإدارة</Link>
+                  </li>
+                )}
+
+                <li className="nav-item">
+                  <button onClick={handleCartOpen} className="btn btn-outline-light mx-2">
+                    🛒 السلة
+                  </button>
+                </li>
+              </>
+            ) : (
               <li className="nav-item">
-                <button onClick={handleCartOpen} className="btn btn-outline-light mx-2">
-                  🛒 السلة
-                </button>
+                <Link href="/login" className="nav-link">تسجيل الدخول</Link>
               </li>
-            </>
-          ) : (
-            <li className="nav-item">
-              <Link href="/login" className="nav-link">تسجيل الدخول</Link>
-            </li>
-          )}
+            )}
           </ul>
         </div>
       </div>

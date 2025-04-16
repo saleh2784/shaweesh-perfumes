@@ -1,34 +1,24 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import Image from 'next/image';
-import { addToCart } from '@/lib/cartUtils';
-import { useCart } from '@/context/CartContext';
+import { useEffect } from 'react';
+import menPerfumes from '../../../data/men';
+import { notFound } from 'next/navigation';
+import RelatedItemsSlider from '../../../components/RelatedItemsSlider';
 import ScrollToTop from '@/components/ScrollToTop';
-import RelatedItemsSlider from '@/components/RelatedItemsSlider';
-import FloatingCartIcon from '@/components/FloatingCartIcon';
+import { addToCart } from '../../../lib/cartUtils';
+import FloatingCartIcon from '../../../components/FloatingCartIcon';
+import { useCart } from '@/context/CartContext';
+import Image from 'next/image';
 
-type Product = {
-  id: number;
-  name: string;
-  price: string;
-  type: string;
-  image: string;
-  description: string;
-};
-
-export default function ProductClient({ id }: { id: string }) {
-  const [product, setProduct] = useState<Product | null>(null);
+export default function ProductDetails({ params }: { params: { id: string } }) {
   const { openCart } = useCart();
+  const id = Number(params.id);
+  const product = menPerfumes.find((p) => p.id === id);
+  if (!product) return notFound();
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/products/${id}`)
-      .then((res) => setProduct(res.data))
-      .catch((err) => console.error('❌ Error loading product:', err));
-  }, [id]);
-
-  if (!product) return <p style={{ textAlign: 'center' }}>جاري تحميل المنتج...</p>;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [params.id]);
 
   return (
     <>
@@ -62,9 +52,7 @@ export default function ProductClient({ id }: { id: string }) {
         </div>
 
         <p style={{ fontSize: '1rem', color: '#555', marginBottom: '0.5rem' }}>{product.description}</p>
-        <h3 style={{ fontSize: '1.5rem', color: '#a35638', marginBottom: '1.5rem' }}>
-          {Number(product.price).toFixed(2)} ₪
-        </h3>
+        <h3 style={{ fontSize: '1.5rem', color: '#a35638', marginBottom: '1.5rem' }}>{product.price} ₪</h3>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center' }}>
           <a
@@ -78,6 +66,7 @@ export default function ProductClient({ id }: { id: string }) {
               borderRadius: '30px',
               fontWeight: 'bold',
               textDecoration: 'none',
+              transition: 'background 0.3s ease',
             }}
           >
             💬 شراء عبر واتساب
@@ -92,17 +81,20 @@ export default function ProductClient({ id }: { id: string }) {
               background: 'linear-gradient(135deg, #d81b60, #c2185b)',
               color: '#fff',
               padding: '0.7rem 1.5rem',
+              border: 'none',
               borderRadius: '30px',
               fontWeight: 'bold',
-              border: 'none',
               cursor: 'pointer',
+              transition: 'opacity 0.3s ease',
             }}
+            onMouseOver={(e) => (e.currentTarget.style.opacity = '0.9')}
+            onMouseOut={(e) => (e.currentTarget.style.opacity = '1')}
           >
             🛒 أضف إلى السلة
           </button>
 
           <a
-            href="/women"
+            href="/men"
             style={{
               marginTop: '1rem',
               color: '#444',
@@ -111,12 +103,12 @@ export default function ProductClient({ id }: { id: string }) {
               fontSize: '0.95rem',
             }}
           >
-            ⬅️ رجوع إلى العطور النسائية
+            ⬅️ رجوع إلى العطور الرجالية
           </a>
         </div>
       </div>
 
-      <RelatedItemsSlider currentId={product.id} allProducts={[product]} type="women" />
+      <RelatedItemsSlider currentId={product.id} allProducts={menPerfumes} type="men" />
       <ScrollToTop />
       <FloatingCartIcon />
     </>

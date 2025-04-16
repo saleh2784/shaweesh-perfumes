@@ -1,15 +1,23 @@
 'use client';
+
 import Link from 'next/link';
 import { addToCart } from '../lib/cartUtils';
 
+type Product = {
+  id: number;
+  name: string;
+  price: string;
+  type: string;
+  image: string;
+  description: string;
+};
 
-export default function ProductCard({ product }) {
+type ProductCardProps = {
+  product: Product;
+};
+
+export default function ProductCard({ product }: ProductCardProps) {
   const productLink = `/${product.type}/${product.id}`;
-  const handleCartOpen = () => {
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new Event('open-cart'));
-    }
-  };
   const whatsappLink = `https://wa.me/972505320456?text=مرحبًا، أود شراء عطر ${encodeURIComponent(
     product.name
   )} بسعر ${encodeURIComponent(product.price)}`;
@@ -41,11 +49,11 @@ export default function ProductCard({ product }) {
       >
         اطلب عبر واتساب
       </a>
-      {/* ✅ Add to Cart Button */}
+
       <button
         onClick={() => {
           addToCart(product);
-          alert("✅ تمت إضافة المنتج إلى السلة!");
+          alert('✅ تمت إضافة المنتج إلى السلة!');
         }}
         style={{
           marginTop: '1rem',
@@ -55,7 +63,7 @@ export default function ProductCard({ product }) {
           border: 'none',
           borderRadius: '8px',
           fontWeight: 'bold',
-          cursor: 'pointer'
+          cursor: 'pointer',
         }}
       >
         🛒 أضف إلى السلة
@@ -90,18 +98,18 @@ export default function ProductCard({ product }) {
           overflow: hidden;
           margin-bottom: 1rem;
         }
-        
+
         img {
           width: 100%;
           height: auto;
           display: block;
           transition: transform 0.3s ease;
         }
-        
+
         .image-container:hover img {
           transform: scale(1.05);
         }
-        
+
         .overlay {
           position: absolute;
           inset: 0;
@@ -114,12 +122,12 @@ export default function ProductCard({ product }) {
           transform: translateY(20px);
           transition: all 0.4s ease;
         }
-        
+
         .image-container:hover .overlay {
           opacity: 1;
           transform: translateY(0);
         }
-        
+
         .hover-button {
           background-color: #d4af37;
           color: white;
@@ -131,7 +139,7 @@ export default function ProductCard({ product }) {
           font-size: 0.95rem;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
-        
+
         .hover-button:hover {
           background-color: #b68c27;
         }

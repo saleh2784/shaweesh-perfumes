@@ -1,26 +1,37 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import Slider from 'react-slick';
 import ProductCard from './ProductCard';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
-import { addToCart } from '../lib/cartUtils';
 
-window.dispatchEvent(new Event('open-cart'));
+type Product = {
+  id: number;
+  name: string;
+  price: string;
+  type: string;
+  image: string;
+  description: string;
+};
 
-function shuffleArray(array) {
+type ProductSliderProps = {
+  products: Product[];
+};
+
+function shuffleArray(array: Product[]): Product[] {
   return [...array].sort(() => 0.5 - Math.random());
 }
 
-function NextArrow({ onClick }) {
+function NextArrow({ onClick }: { onClick?: () => void }) {
   return (
     <div className="slider-arrow right" onClick={onClick}>
       <FaChevronRight size={20} />
     </div>
-  );g
+  );
 }
 
-function PrevArrow({ onClick }) {
+function PrevArrow({ onClick }: { onClick?: () => void }) {
   return (
     <div className="slider-arrow left" onClick={onClick}>
       <FaChevronLeft size={20} />
@@ -28,8 +39,8 @@ function PrevArrow({ onClick }) {
   );
 }
 
-export default function ProductSlider({ products }) {
-  const [shuffledProducts, setShuffledProducts] = useState([]);
+export default function ProductSlider({ products }: ProductSliderProps) {
+  const [shuffledProducts, setShuffledProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     setShuffledProducts(shuffleArray(products));
@@ -58,18 +69,17 @@ export default function ProductSlider({ products }) {
 
   return (
     <div className="slider-container">
-    <Slider {...settings}>
-      {shuffledProducts.map((product) => (
-        <div key={product.id + product.name} className="fade-card">
-          <ProductCard product={product} />
-        </div>
-      ))}
-    </Slider>
+      <Slider {...settings}>
+        {products.map(product => (
+          <div key={product.id} className="fade-card">
+            <ProductCard product={product} />
+          </div>
+        ))}
+      </Slider>
 
-    {/* ✅ Outside of Slider */}
-    <div className="see-more-container">
-      <a href="/men" className="see-more-button">شاهد المزيد →</a>
-    </div>
+      <div className="see-more-container">
+        <a href="/men" className="see-more-button">شاهد المزيد →</a>
+      </div>
 
       <style jsx>{`
         .slider-container {
@@ -92,32 +102,34 @@ export default function ProductSlider({ products }) {
           z-index: 10;
           transition: all 0.3s ease;
         }
+
         .fade-card {
           opacity: 0;
           transform: translateY(20px);
           animation: fadeUp 0.8s ease forwards;
         }
-        
+
         :global(.slick-slide.slick-active .fade-card) {
           opacity: 1;
           transform: translateY(0);
         }
-        
+
         @keyframes fadeUp {
           from {
             opacity: 0;
             transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
           }
         }
+
         .see-more-container {
           text-align: center;
           margin-top: 3.5rem;
         }
-        
+
         .see-more-button {
           display: inline-block;
           background-color: #d4af37;
@@ -128,10 +140,11 @@ export default function ProductSlider({ products }) {
           text-decoration: none;
           transition: background 0.3s ease;
         }
-        
+
         .see-more-button:hover {
           background-color: #b68c27;
         }
+
         .slider-arrow.left {
           left: 10px;
         }
