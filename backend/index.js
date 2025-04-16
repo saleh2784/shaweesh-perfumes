@@ -23,6 +23,21 @@ app.get('/', (req, res) => {
 app.get('/products/:type', async (req, res) => {
   const { type } = req.params;
 
+
+// ✅ Get product by type and id
+app.get('/products/:type/:id', async (req, res) => {
+  const { type, id } = req.params;
+  try {
+    const result = await pool.query(
+      'SELECT * FROM products WHERE type = $1 AND id = $2',
+      [type, id]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Product not found' });
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
   // Validate type
   if (type !== 'men' && type !== 'women') {
     return res.status(400).json({ error: 'Invalid product type' });
