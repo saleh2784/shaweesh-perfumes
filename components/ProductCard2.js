@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { addToCart } from '../lib/cartUtils';
 
-window.dispatchEvent(new Event('open-cart'));
+// window.dispatchEvent(new Event('open-cart'));
 
 export default function ProductCard({ product }) {
   const productLink = `/${product.type}/${product.id}`;
