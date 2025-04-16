@@ -14,12 +14,11 @@ export default function Home() {
 
   return (
     <main>
-      {/* <BackgroundVideo /> */}
       <h1 className={styles.title}>مرحبا بكم في الشاويش للعطور</h1>
       <br></br>
       <p className={styles.subtitle}>تشكيلة فاخرة من العطور الرجالية والنسائية</p>
       <div id="products">
-      <ProductSlider products={products} />
+      <ProductSlider />
       </div>
       <VideoPage/>
       <MoonBannerSection />
